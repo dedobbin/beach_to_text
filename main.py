@@ -1,6 +1,3 @@
-#pip3 install google-cloud-speech
-#pip3 install python-dotenv
-
 import os, sys
 from dotenv import load_dotenv
 from speech_to_text import *
