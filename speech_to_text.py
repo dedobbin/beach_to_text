@@ -4,7 +4,7 @@ from mock import *
 
 speech_client = None
 
-mock = True
+mock = False
 
 def speech_to_text_initialize():
     global speech_client

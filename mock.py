@@ -36,10 +36,6 @@ class WordMock:
 
 class WordTsMock:
     def __init__(self, json):
-        self.nanos = 0.0
-        self.seconds = 0.0
-        self.minutes = 0.0
-        self.hours = 0.0
         self.print_prefix = "    "
 
         if 'seconds' in json: 
@@ -62,14 +58,6 @@ class WordTsMock:
         if self.nanos > 0:
             result += f"\n{self.print_prefix}nanos: {self.nanos}"
         return result
-
-    def to_seconds(self):
-        res = 0.0;
-        res += self.seconds
-        res += self.nanos / 1_000_000_000
-        res += self.minutes * 60
-        res += self.hours * 3600  
-        return res
 
 def mock_to_text():
     result = []
