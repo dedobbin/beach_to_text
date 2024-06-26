@@ -1,0 +1,184 @@
+[
+    {
+      "transcript": "Dat moet toch wat aan te doen? Zijn Sjonge jonge idee Annabel Kijk eens wat Barbapapa doet.",
+      "confidence": 0.935369253,
+      "words": [
+        {
+          "start_time": {
+            "nanos": 700000000
+          },
+          "end_time": {
+            "nanos": 700000000
+          },
+          "word": "Dat"
+        },
+        {
+          "start_time": {
+            "nanos": 700000000
+          },
+          "end_time": {
+            "nanos": 700000000
+          },
+          "word": "moet"
+        },
+        {
+          "start_time": {
+            "nanos": 700000000
+          },
+          "end_time": {
+            "nanos": 900000000
+          },
+          "word": "toch"
+        },
+        {
+          "start_time": {
+            "nanos": 900000000
+          },
+          "end_time": {
+            "seconds": 1
+          },
+          "word": "wat"
+        },
+        {
+          "start_time": {
+            "seconds": 1,
+            "nanos": 100000000
+          },
+          "end_time": {
+            "seconds": 1,
+            "nanos": 100000000
+          },
+          "word": "aan"
+        },
+        {
+          "start_time": {
+            "seconds": 1,
+            "nanos": 100000000
+          },
+          "end_time": {
+            "seconds": 1,
+            "nanos": 200000000
+          },
+          "word": "te"
+        },
+        {
+          "start_time": {
+            "seconds": 1,
+            "nanos": 200000000
+          },
+          "end_time": {
+            "seconds": 1,
+            "nanos": 400000000
+          },
+          "word": "doen?"
+        },
+        {
+          "start_time": {
+            "seconds": 1,
+            "nanos": 400000000
+          },
+          "end_time": {
+            "seconds": 1,
+            "nanos": 600000000
+          },
+          "word": "Zijn"
+        },
+        {
+          "start_time": {
+            "seconds": 4,
+            "nanos": 700000000
+          },
+          "end_time": {
+            "seconds": 4,
+            "nanos": 700000000
+          },
+          "word": "Sjonge"
+        },
+        {
+          "start_time": {
+            "seconds": 5
+          },
+          "end_time": {
+            "seconds": 5
+          },
+          "word": "jonge"
+        },
+        {
+          "start_time": {
+            "seconds": 5,
+            "nanos": 800000000
+          },
+          "end_time": {
+            "seconds": 5,
+            "nanos": 800000000
+          },
+          "word": "idee"
+        },
+        {
+          "start_time": {
+            "seconds": 7,
+            "nanos": 200000000
+          },
+          "end_time": {
+            "seconds": 7,
+            "nanos": 200000000
+          },
+          "word": "Annabel"
+        },
+        {
+          "start_time": {
+            "seconds": 7,
+            "nanos": 700000000
+          },
+          "end_time": {
+            "seconds": 7,
+            "nanos": 700000000
+          },
+          "word": "Kijk"
+        },
+        {
+          "start_time": {
+            "seconds": 7,
+            "nanos": 700000000
+          },
+          "end_time": {
+            "seconds": 7,
+            "nanos": 900000000
+          },
+          "word": "eens"
+        },
+        {
+          "start_time": {
+            "seconds": 8
+          },
+          "end_time": {
+            "seconds": 8
+          },
+          "word": "wat"
+        },
+        {
+          "start_time": {
+            "seconds": 8,
+            "nanos": 500000000
+          },
+          "end_time": {
+            "seconds": 8,
+            "nanos": 500000000
+          },
+          "word": "Barbapapa"
+        },
+        {
+          "start_time": {
+            "seconds": 8,
+            "nanos": 700000000
+          },
+          "end_time": {
+            "seconds": 8,
+            "nanos": 700000000
+          },
+          "word": "doet."
+        }
+      ]
+    }
+  ]
+  

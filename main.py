@@ -17,8 +17,8 @@ def main():
     speech_to_text_initialize()
 
     file_name = os.getenv("INPUT_FILE")
-    transcripts = file_to_speech(file_name)
-    for e in transcripts:
+    texts = file_to_speech(file_name)
+    for e in texts:
         print(e)
 
 if __name__ == '__main__':
