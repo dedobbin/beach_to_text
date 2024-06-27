@@ -1,29 +1,43 @@
-import os, sys, json
+import os, sys, json, argparse, math
 from dotenv import load_dotenv
 from speech_to_text import *
 
 def main():
     load_dotenv()
-    if len(sys.argv) > 1:
-        file_path = sys.argv[1]
-    else:
-        file_path = os.getenv("INPUT_FILE")
-        if not file_path:
-            raise ValueError("No input file path provided. Please specify either as an argument or set INPUT_FILE environment variable.")
+    file_path, n_seconds = parse_arguments()
 
     speech_to_text_initialize()
 
-    segment_n_seconds = 2 # TODO: get as cmdline arg
-    file_name = os.getenv("INPUT_FILE")
-    texts = file_to_speech(file_name)
+    texts = file_to_speech(file_path)
 
     result = []
     for e in texts:
         #print(e)
-        for f in cut_subs(e, segment_n_seconds):
+        for f in cut_subs(e, n_seconds):
             result.append(f)
     print(json.dumps(result))
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="beach to text jajajaj")
+    parser.add_argument('-f', '--file_path', type=str, help="Path to input file.")
+    parser.add_argument('-s', '--n_seconds', type=float, help="Number of seconds per segment")
+
+    args = parser.parse_args()
+
+    file_path = args.file_path
+    if not file_path:
+        file_path = os.getenv("INPUT_FILE")
+    if not file_path:
+        raise ValueError("No input file path provided. Please specify either as an argument (-f) or set INPUT_FILE environment variable.")
+
+    n_seconds = args.n_seconds
+    if not n_seconds:
+        #TODO: make it optional to cut segments instead of this hack
+        n_seconds = float('inf')
     
+    return file_path, n_seconds
+
+
 def cut_subs(text, n_seconds):
     segments = []
     current_segment = ""
@@ -53,8 +67,6 @@ def cut_subs(text, n_seconds):
 
     return segments
             
-
-
 def to_seconds(ts):
     res = 0.0;
     if hasattr(ts, 'seconds'):
