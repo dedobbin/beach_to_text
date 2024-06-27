@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, json
 from dotenv import load_dotenv
 from speech_to_text import *
 
@@ -16,10 +16,13 @@ def main():
     segment_n_seconds = 2 # TODO: get as cmdline arg
     file_name = os.getenv("INPUT_FILE")
     texts = file_to_speech(file_name)
+
+    result = []
     for e in texts:
         #print(e)
-        subs = cut_subs(e, segment_n_seconds)
-        print(subs)
+        for f in cut_subs(e, segment_n_seconds):
+            result.append(f)
+    print(json.dumps(result))
     
 def cut_subs(text, n_seconds):
     segments = []
@@ -27,23 +30,26 @@ def cut_subs(text, n_seconds):
     current_n_seconds = n_seconds
 
     for word in text.words:
-        # Convert word start_time and end_time to seconds
         word_start_time = to_seconds(word.start_time)
         word_end_time = to_seconds(word.end_time)
 
         if word_start_time > current_n_seconds:
-            # Append the current segment to segments list and reset current_segment
-            segments.append(current_segment.strip())
+            segments.append({
+                "text": current_segment.strip(),
+                "start_time": word_start_time,
+                "end_time": word_end_time,
+            })
             current_segment = ""
-            # Increase n_seconds
             current_n_seconds += word_end_time
 
-        # Add the word to the current segment
         current_segment += word.word + " "
 
-    # Add the last segment if it's not empty
     if current_segment:
-        segments.append(current_segment.strip())
+        segments.append({
+            "text": current_segment.strip(),
+            "start_time": word_start_time,
+            "end_time": word_end_time,
+        })
 
     return segments
             
