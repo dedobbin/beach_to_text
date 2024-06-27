@@ -13,13 +13,14 @@ def main():
 
     speech_to_text_initialize()
 
+    segment_n_seconds = 2 # TODO: get as cmdline arg
     file_name = os.getenv("INPUT_FILE")
     texts = file_to_speech(file_name)
     for e in texts:
         #print(e)
-        subs = cut_subs(e, 2)
+        subs = cut_subs(e, segment_n_seconds)
         print(subs)
-
+    
 def cut_subs(text, n_seconds):
     segments = []
     current_segment = ""
