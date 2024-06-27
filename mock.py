@@ -1,4 +1,5 @@
 import json
+import os
 
 class SpeechRecognitionAlternativeMock:
     def __init__(self, transcript, confidence, words):
@@ -61,7 +62,8 @@ class WordTsMock:
 
 def mock_to_text():
     result = []
-    with open("mock/to_text.json", 'r') as file:
+    filepath = os.path.join(os.path.dirname(__file__), "mock", "to_text.json")
+    with open(filepath, 'r') as file:
         data = json.load(file)
     for e in data:
         # print(e)
