@@ -1,10 +1,11 @@
 import io
 from google.cloud import speech
+from google.api_core.exceptions import InvalidArgument
 from mock import *
 
 speech_client = None
 
-mock = True
+mock = False
 
 def speech_to_text_initialize():
     global speech_client
@@ -42,20 +43,17 @@ def to_text(raw_audio):
 
     texts = []
 
-    response = speech_client.recognize(request={"config": config, "audio": audio})# Reads the response
+    try:
+        response = speech_client.recognize(request={"config": config, "audio": audio})# Reads the response
+    
+    except InvalidArgument as e:
+        print("InvalidArgument error occurred:", e)
+        return []
+
     for result in response.results:
         if not result.alternatives:
             continue
 
         texts.append(result.alternatives[0])
-
-        # print(f"Result: {result}")
-        # print(f"Transcript: {result.alternatives[0].transcript}")
-        # print(f"Confidence: {result.alternatives[0].confidence}") 
-        # print(f"End time: {result.result_end_time}") 
-        # if result.alternatives[0].words:
-        #     print(result.alternatives[0].words);
-        # else:
-        #     print("No word-level timestamp information available for this alternative.")
     
     return texts
