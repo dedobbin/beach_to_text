@@ -1,4 +1,4 @@
 pip3 install google-cloud-speech
 pip3 install python-dotenv
-pip3 install Flask
-pip install fastapi uvicorn starlette
+pip3 install fastapi uvicorn starlette
+pip3 install python-multipart
