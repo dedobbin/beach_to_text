@@ -59,31 +59,32 @@ def to_text(raw_audio):
     return texts
 
 def cut_subs(text, n_seconds):
+    if len(text.words) == 0:
+        return []
+    
     segments = []
-    current_segment = ""
-    current_n_seconds = n_seconds
-
-    for word in text.words:
-        word_start_time = to_seconds(word.start_time)
-        word_end_time = to_seconds(word.end_time)
-
-        if word_start_time > current_n_seconds:
+    cur_seg = ""
+    cur_start_time = to_seconds(text.words[0].start_time);
+    cur_lim = n_seconds
+    i = 0;
+    for w in text.words:
+        end_time = to_seconds(w.end_time)
+        cur_seg += w.word + " "
+        if end_time > cur_lim:
+            cur_lim += end_time
             segments.append({
-                "text": current_segment.strip(),
-                "start_time": word_start_time,
-                "end_time": word_end_time,
+                "text": cur_seg.strip(),
+                "start_time": cur_start_time,
+                "end_time": end_time,
             })
-            current_segment = ""
-            current_n_seconds += word_end_time
+            cur_seg = ""
+            cur_start_time = to_seconds(w.start_time)
 
-        current_segment += word.word + " "
-
-    if current_segment:
-        segments.append({
-            "text": current_segment.strip(),
-            "start_time": word_start_time,
-            "end_time": word_end_time,
-        })
+    segments.append({
+        "text": cur_seg.strip(),
+        "start_time": cur_start_time,
+        "end_time": end_time,
+    })
 
     return segments
 

@@ -15,7 +15,8 @@ def main():
         #print(e)
         for f in cut_subs(e, n_seconds):
             result.append(f)
-    print(json.dumps(result))
+    
+    print(result)
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="beach to text jajajaj")
