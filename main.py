@@ -13,8 +13,19 @@ def main():
     result = []
     for e in texts:
         #print(e)
-        for f in cut_subs(e, n_seconds):
-            result.append(f)
+        if len(e.words) == 0:
+            print("Got no words")
+            #TODO: error
+            break
+        if n_seconds < to_seconds(e.words[-1].end_time):
+            for f in cut_subs(e, n_seconds):
+                result.append(f)
+        else:
+            result.append({
+                "text": e.transcript,
+                "start_time": to_seconds(e.words[0].start_time),
+                "end_time": to_seconds(e.words[-1].end_time),
+            })
     
     print(result)
 
@@ -33,7 +44,6 @@ def parse_arguments():
 
     n_seconds = args.n_seconds
     if not n_seconds:
-        #TODO: make it optional to cut segments instead of this hack
         n_seconds = float('inf')
     
     return file_path, n_seconds

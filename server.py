@@ -30,6 +30,7 @@ async def beach_to_text(
     hash_md5 = hashlib.md5(audio.filename.encode()).hexdigest()
     save_path = os.path.join("uploads", f"{hash_md5}.wav")
     content = await audio.read() 
+    
     # os.makedirs(os.path.dirname(save_path), exist_ok=True)
     # with open(save_path, "wb") as buffer:
     #     buffer.write(await audio.read())
@@ -37,11 +38,21 @@ async def beach_to_text(
     texts = to_text(content)
 
     result = []
-    #TODO: make possible to skip
     for e in texts:
         #print(e)
-        for f in cut_subs(e, n_seconds):
-            result.append(f)
+        if len(e.words) == 0:
+            print("Got no words")
+            #TODO: error
+            break
+        if n_seconds < to_seconds(e.words[-1].end_time):
+            for f in cut_subs(e, n_seconds):
+                result.append(f)
+        else:
+            result.append({
+                "text": e.transcript,
+                "start_time": to_seconds(e.words[0].start_time),
+                "end_time": to_seconds(e.words[-1].end_time),
+            })
     
     res = result
     print("res", res)
