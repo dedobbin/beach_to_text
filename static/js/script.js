@@ -495,7 +495,8 @@ async function make_clip(start_time, end_time)
 
     const form_data = new FormData();
     form_data.append('audio', audio_blob, "audio_segment.wav");
-    form_data.append('n_seconds', 2);
+    const n_seconds = parseFloat(document.getElementById("generate-subtitles-n-seconds").value)
+    form_data.append('n_seconds', n_seconds);
     result = null;
     console.log("[debug] Sending wave file to server..");
     try {

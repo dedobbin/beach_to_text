@@ -30,6 +30,10 @@ body {
     height:200px;
 }
 
+#generate-subtitles-n-seconds {
+    width: 45px;
+}
+
 video {
     width: 100%;
     height: auto;
