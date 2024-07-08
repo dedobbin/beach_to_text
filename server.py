@@ -3,6 +3,7 @@
 import os
 import hashlib
 import json
+from typing import Optional
 from fastapi import FastAPI, UploadFile, Form, File
 from fastapi.responses import FileResponse 
 from starlette.staticfiles import StaticFiles
@@ -24,7 +25,7 @@ async def server_root():
 @app.post("/beach_to_text/")
 async def beach_to_text(
     audio: UploadFile = File(...), 
-    n_seconds: int = Form(...)
+    n_seconds: Optional[int] = Form(float('inf'))
 ):
     hash_md5 = hashlib.md5(audio.filename.encode()).hexdigest()
     save_path = os.path.join("uploads", f"{hash_md5}.wav")
