@@ -238,6 +238,33 @@ function generate_selected_subtitle()
     })
 }
 
+function split_selected_sub_by_text()
+{
+    if (!subtitles[selected_sub_index]){
+        alert("Please select sub");
+        return;
+    }
+
+
+    let elem_text = document.getElementById("subtitle-text");
+    let split_pos = elem_text.selectionStart;
+    if (split_pos == elem_text.value.length){
+        return;
+    }
+
+    var text_a = elem_text.value.substring(0, split_pos);
+    var text_b = elem_text.value.substring(split_pos);
+
+    // TODO: count amount of words to estimate time
+    subtitles[selected_sub_index].text = text_a;
+    const end_time_seconds = convert_to_seconds(subtitles[selected_sub_index].end_time)
+
+    let sub = new Subtitle(format_time(end_time_seconds + 0.1), format_time(end_time_seconds + 1), text_b);
+    add_subtitle(sub);
+    render_subtitles_on_timeline(subtitles)
+
+}
+
 function save_displayed_to_selected_subtitle()
 {
     let elem_wrapper = document.getElementById("sub-info");
@@ -650,7 +677,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
             delete_subtitle(selected_sub_index);
             deselect_sub();
         } else if (event.code == "Numpad7"){
-            generate_selected_subtitle()
+            //generate_selected_subtitle()
+            split_selected_sub_by_text();
+            event.preventDefault();
         } else if (event.code == "Numpad3"){
             let ts = video_player.currentTime;
             if (subtitles[selected_sub_index]){
