@@ -234,7 +234,7 @@ function generate_selected_subtitle()
             let sub = new Subtitle(format_time(original_start + raw.start_time), format_time(original_start + raw.end_time), raw.text)
             add_subtitle(sub)
         });
-        fix_subtitles(subtitles)
+        fix_subtitles(subtitles, false)
     })
 }
 
@@ -244,25 +244,29 @@ function split_selected_sub_by_text()
         alert("Please select sub");
         return;
     }
-
-
     let elem_text = document.getElementById("subtitle-text");
+    const original_text = elem_text.value; 
     let split_pos = elem_text.selectionStart;
-    if (split_pos == elem_text.value.length){
+    if (split_pos == original_text.length){
         return;
     }
 
-    var text_a = elem_text.value.substring(0, split_pos);
-    var text_b = elem_text.value.substring(split_pos);
-
-    // TODO: count amount of words to estimate time
+    const text_a = original_text.substring(0, split_pos);
+    const perc_a = text_a.length/original_text.length 
+    const start_a = convert_to_seconds(subtitles[selected_sub_index].start_time)
+    const end_a = convert_to_seconds(subtitles[selected_sub_index].end_time)
+    const dur_a = end_a - start_a;
+    const new_dur_a = dur_a * perc_a;
+    subtitles[selected_sub_index].end_time = format_time(start_a + new_dur_a);
     subtitles[selected_sub_index].text = text_a;
-    const end_time_seconds = convert_to_seconds(subtitles[selected_sub_index].end_time)
 
-    let sub = new Subtitle(format_time(end_time_seconds + 0.1), format_time(end_time_seconds + 1), text_b);
-    add_subtitle(sub);
+    const text_b = original_text.substring(split_pos);
+    const perc_b = text_b.length/original_text.length;
+    const start_b = start_a + new_dur_a +0.1
+    const dur_b = dur_a * perc_b;
+    add_subtitle(new Subtitle(format_time(start_b), format_time(start_b + dur_b), text_b));
+
     render_subtitles_on_timeline(subtitles)
-
 }
 
 function save_displayed_to_selected_subtitle()
@@ -457,6 +461,16 @@ function time_line_zoom(n, video_element)
     move_cursor(percentage_played);
 }
 
+function get_time_line_zoom()
+{
+    const element = document.getElementById('time-line');
+    const original_w = element.offsetWidth;
+
+    current_w = element.getBoundingClientRect().width;
+
+    return current_w / original_w;
+}
+
 async function make_clip(start_time, end_time)
 {
     const elem_video = document.getElementById('video-player');
@@ -552,7 +566,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     move_cursor(0);
     time_line_zoom(1);
     set_overlay(false)
-    add_subtitle(new Subtitle("0:0:0,517", "0:1:48,780", "fgfdg"))
+    add_subtitle(new Subtitle("0:0:0,517", "0:1:48,780", "dit is een zin met allemaal dingen"))
 
     const video_player = document.getElementById('video-player');
     const elem_cursor = document.getElementById("cursor");
