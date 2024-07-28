@@ -621,9 +621,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     time_line_zoom(1);
     set_overlay(false);
     display_video_list();
-    select_video("static/media/teh_video.mp4")
+
+    fetch("video_list").then(res=>res.json()).then(json=>{
+        if (json.size == 0) return;
+        select_video(json[0].path);
+        set_overlay(false)
+    });
     //add_subtitle(new Subtitle("0:0:0,517", "0:1:48,780", "dit is een zin met allemaal dingen"))
-    set_overlay(false)
 
     const video_player = document.getElementById('video-player');
     const elem_cursor = document.getElementById("cursor");
