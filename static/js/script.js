@@ -603,7 +603,6 @@ async function display_video_list()
     // TODO: get from server
     const response = await fetch("video_list");
     const videos = await response.json();
-    console.log(typeof(videos));
     for (let i = 0; i < videos.length; i++) {
         const li = document.createElement("li");
         li.innerText = videos[i].name;
@@ -616,6 +615,7 @@ async function display_video_list()
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
+    set_overlay(true)
     clear_fields();
     move_cursor(0);
     time_line_zoom(1);
@@ -623,6 +623,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     display_video_list();
     select_video("static/media/teh_video.mp4")
     //add_subtitle(new Subtitle("0:0:0,517", "0:1:48,780", "dit is een zin met allemaal dingen"))
+    set_overlay(false)
 
     const video_player = document.getElementById('video-player');
     const elem_cursor = document.getElementById("cursor");
@@ -713,6 +714,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
             elem_start.value = format_time(video_player.currentTime);
             selected_sub_index = -1;
         }
+    });
+
+    document.getElementById("load-video-input").addEventListener("change", e=>{
+        const elem_input = e.target;
+        const file = elem_input.files[0];
+        if (!file){
+            return;
+        }
+
+        set_overlay(true);
+        const form_data = new FormData();
+        form_data.append('file', file);
+        fetch("upload_video", {
+            method: "POST",
+            body: form_data
+        }).then(res=>{
+            display_video_list();
+            set_overlay(false);
+        })
+        // TODO: handle errors
     });
 
     document.addEventListener('keydown', function(event) {        

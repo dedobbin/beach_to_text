@@ -3,12 +3,15 @@
 import os
 import hashlib
 import json
+import uuid
 from typing import Optional
-from fastapi import FastAPI, UploadFile, Form, File
+from fastapi import FastAPI, UploadFile, Form, File, HTTPException
 from fastapi.responses import FileResponse 
 from starlette.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from speech_to_text import *
+
+VIDEO_DIR = "static/media"
 
 load_dotenv()
 app = FastAPI()
@@ -16,7 +19,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 if not speech_to_text_initialize():
     print("Failed to init speech to text API")
 
-
+allowed_extensions = ["mp4", "webm"]
 
 @app.get("/")
 async def server_root():
@@ -60,12 +63,33 @@ async def beach_to_text(
 
 @app.get("/video_list")
 async def server_root():
-    directory = "static/media"
     files = [
         {
             "name": f,
-            "path": os.path.join(directory, f)
+            "path": os.path.join(VIDEO_DIR, f)
         }
-        for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))
+        for f in os.listdir(VIDEO_DIR) if os.path.isfile(os.path.join(VIDEO_DIR, f))
     ]
     return files
+
+@app.post("/upload_video/")
+async def beach_to_text(
+    file: UploadFile = File(...), 
+):
+    file_path = os.path.join(VIDEO_DIR, file.filename)
+
+    base, extension = os.path.splitext(file_path)
+
+    if not extension in allowed_extensions:
+        raise HTTPException(status_code=400, detail=f"Invalid file type. Allowed: {','.join(allowed_extensions)}")
+
+    new_filename = file_path
+    while os.path.exists(new_filename):
+        random_string = uuid.uuid4().hex[:8]
+        new_filename = f"{base}_{random_string}{extension}"
+
+    with open(new_filename, "wb") as buffer:
+        buffer.write(await file.read())
+
+    return {"filename": file.filename, "file_path": new_filename}
+    
