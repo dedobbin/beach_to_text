@@ -68,7 +68,9 @@ async def server_root():
             "name": f,
             "path": os.path.join(VIDEO_DIR, f)
         }
-        for f in os.listdir(VIDEO_DIR) if os.path.isfile(os.path.join(VIDEO_DIR, f))
+        for f in os.listdir(VIDEO_DIR)
+        if os.path.isfile(os.path.join(VIDEO_DIR, f))
+        and f.split('.')[-1].lower() in allowed_extensions
     ]
     return files
 
