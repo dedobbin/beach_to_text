@@ -11,6 +11,8 @@ let subtitles = []
 
 let dragged_sub = null;
 
+current_video = null;
+
 function set_overlay(yes=true)
 {
     if (yes){
@@ -18,6 +20,35 @@ function set_overlay(yes=true)
     } else {
         document.getElementById("overlay").style.visibility = "hidden";
     }
+}
+
+function select_video(input)
+{
+    console.log(`[debug] select video ${input}`)
+    const elem_source = document.querySelector("#video-player source");
+    const mime_types = {
+        "mp4": "video/mp4",
+        "webm": "video/webm",
+        "ogg": "video/ogg",
+        "ogv": "video/ogg",
+        "avi": "video/x-msvideo",
+        "mov": "video/quicktime",
+    }
+    const extension = get_extension(input);
+    if (!extension) {
+        console.error("Selected video has no extension");
+        return;
+    }
+    const mime_type = mime_types[extension];
+    if (!mime_type){
+        console.error("Selected video has unknown type");
+        return;
+    }
+    elem_source.setAttribute("type", mime_type);
+    elem_source.setAttribute("src", input);
+    current_video = input;
+    document.getElementById("video-player").load();
+    console.log("load");
 }
 
 function change_mode(new_mode){
@@ -565,7 +596,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     clear_fields();
     move_cursor(0);
     time_line_zoom(1);
-    set_overlay(false)
+    set_overlay(false);
+    select_video("static/media/teh_video.mp4")
     add_subtitle(new Subtitle("0:0:0,517", "0:1:48,780", "dit is een zin met allemaal dingen"))
 
     const video_player = document.getElementById('video-player');

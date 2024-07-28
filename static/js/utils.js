@@ -17,6 +17,12 @@ function rand()
     return Math.floor(Math.random() * 100000);
 }
 
+function get_extension(path) 
+{
+    const index = path.lastIndexOf('.');
+    return index !== -1 ? path.substring(index + 1) : null;
+}
+
 function buffer_to_wave(audio_buffer, len) {
     let n_channels = audio_buffer.numberOfChannels,
         length = len * n_channels * 2 + 44,
