@@ -57,3 +57,15 @@ async def beach_to_text(
     res = result
     print("res", res)
     return res
+
+@app.get("/video_list")
+async def server_root():
+    directory = "static/media"
+    files = [
+        {
+            "name": f,
+            "path": os.path.join(directory, f)
+        }
+        for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))
+    ]
+    return files

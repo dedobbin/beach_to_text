@@ -22,35 +22,6 @@ function set_overlay(yes=true)
     }
 }
 
-function select_video(input)
-{
-    console.log(`[debug] select video ${input}`)
-    const elem_source = document.querySelector("#video-player source");
-    const mime_types = {
-        "mp4": "video/mp4",
-        "webm": "video/webm",
-        "ogg": "video/ogg",
-        "ogv": "video/ogg",
-        "avi": "video/x-msvideo",
-        "mov": "video/quicktime",
-    }
-    const extension = get_extension(input);
-    if (!extension) {
-        console.error("Selected video has no extension");
-        return;
-    }
-    const mime_type = mime_types[extension];
-    if (!mime_type){
-        console.error("Selected video has unknown type");
-        return;
-    }
-    elem_source.setAttribute("type", mime_type);
-    elem_source.setAttribute("src", input);
-    current_video = input;
-    document.getElementById("video-player").load();
-    console.log("load");
-}
-
 function change_mode(new_mode){
     if (mode == new_mode) return; 
 
@@ -592,13 +563,66 @@ async function make_clip(start_time, end_time)
     return result;
 }
 
+async function select_video(input)
+{
+    console.log(`[debug] select video ${input}`)
+    // const res = await fetch(input);
+    // if (res.status !== 200){
+    //     console.error(`${input} does not exist`);
+    // }
+
+    const elem_source = document.querySelector("#video-player source");
+    const mime_types = {
+        "mp4": "video/mp4",
+        "webm": "video/webm",
+        "ogg": "video/ogg",
+        "ogv": "video/ogg",
+        "avi": "video/x-msvideo",
+        "mov": "video/quicktime",
+    }
+    const extension = get_extension(input);
+    if (!extension) {
+        console.error("Selected video has no extension");
+        return;
+    }
+    const mime_type = mime_types[extension];
+    if (!mime_type){
+        console.error("Selected video has unknown type");
+        return;
+    }
+    elem_source.setAttribute("type", mime_type);
+    elem_source.setAttribute("src", input);
+    current_video = input;
+    document.getElementById("video-player").load();
+}
+
+async function display_video_list()
+{
+    const container = document.getElementById("video-list");
+    container.innerHTML = "";
+    // TODO: get from server
+    const response = await fetch("video_list");
+    const videos = await response.json();
+    console.log(typeof(videos));
+    for (let i = 0; i < videos.length; i++) {
+        const li = document.createElement("li");
+        li.innerText = videos[i].name;
+        li.setAttribute("data-path", videos[i].path);
+        li.addEventListener("click", e=>{
+            select_video(e.target.getAttribute("data-path"))
+        });
+        container.appendChild(li);
+    };
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
     clear_fields();
     move_cursor(0);
     time_line_zoom(1);
     set_overlay(false);
+    display_video_list();
     select_video("static/media/teh_video.mp4")
-    add_subtitle(new Subtitle("0:0:0,517", "0:1:48,780", "dit is een zin met allemaal dingen"))
+    //add_subtitle(new Subtitle("0:0:0,517", "0:1:48,780", "dit is een zin met allemaal dingen"))
 
     const video_player = document.getElementById('video-player');
     const elem_cursor = document.getElementById("cursor");
