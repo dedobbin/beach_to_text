@@ -81,6 +81,7 @@ async def beach_to_text(
     file_path = os.path.join(VIDEO_DIR, file.filename)
 
     base, extension = os.path.splitext(file_path)
+    extension=extension.lower().lstrip(".")
 
     if not extension in allowed_extensions:
         raise HTTPException(status_code=400, detail=f"Invalid file type. Allowed: {','.join(allowed_extensions)}")
@@ -88,7 +89,7 @@ async def beach_to_text(
     new_filename = file_path
     while os.path.exists(new_filename):
         random_string = uuid.uuid4().hex[:8]
-        new_filename = f"{base}_{random_string}{extension}"
+        new_filename = f"{base}_{random_string}.{extension}"
 
     with open(new_filename, "wb") as buffer:
         buffer.write(await file.read())
