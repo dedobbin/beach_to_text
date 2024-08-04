@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 from speech_to_text import *
 
 VIDEO_DIR = "static/media"
+os.makedirs(VIDEO_DIR, exist_ok=True)
 
 load_dotenv()
 app = FastAPI()
