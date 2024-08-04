@@ -17,6 +17,7 @@ os.makedirs(VIDEO_DIR, exist_ok=True)
 load_dotenv()
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 if not speech_to_text_initialize():
     print("Failed to init speech to text API")
 
@@ -58,7 +59,12 @@ async def beach_to_text(
                 "end_time": to_seconds(e.words[-1].end_time),
             })
     
-    res = result
+    res = {}
+    res["data"] = result
+    res["status"] = "ok"
+    if not is_connected_to_gcloud():
+        res["status"] = "no_gcloud_connection"
+
     print("res", res)
     return res
 

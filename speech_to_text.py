@@ -4,16 +4,19 @@ from google.api_core.exceptions import InvalidArgument
 from mock import *
 
 speech_client = None
+gcloud_connection = False
 
 mock = False
 
 def speech_to_text_initialize():
-    global speech_client
+    global speech_client, gcloud_connection
     if (mock):
+        gcloud_connection = True
         return True
     
     try:
         speech_client = speech.SpeechClient()
+        gcloud_connection = True
         return True
     except Exception as e:
         print(f"{type(e).__name__} happend: {str(e)}")
@@ -23,6 +26,9 @@ def audio_file_to_text(path):
     with io.open(path, "rb") as audio_file:
         content = audio_file.read()
         return to_text(content)
+    
+def is_connected_to_gcloud():
+    return gcloud_connection
 
 def to_text(raw_audio):
     global speech_client
@@ -48,6 +54,7 @@ def to_text(raw_audio):
     
     except InvalidArgument as e:
         print("InvalidArgument error occurred:", e)
+        # TODO: signal back through API an error happend
         return []
 
     for result in response.results:

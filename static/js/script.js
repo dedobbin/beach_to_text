@@ -226,13 +226,18 @@ function generate_selected_subtitle()
     }
 
     make_clip(convert_to_seconds(sub.start_time), convert_to_seconds(sub.end_time)).then(new_subs=>{
-        if (!new_subs){
-            alert("Failed to get subtitles from server");
+        if (!new_subs || !new_subs.data || new_subs.data.length == 0){
+            alert("Got no subtitles from server");
             return;
         }                
         let original_start = convert_to_seconds(subtitles[selected_sub_index].start_time);
         delete_subtitle(selected_sub_index);
-        new_subs.forEach(raw=>{
+        if (new_subs.status != "ok"){
+            alert(`Server error: ${new_subs.status}`);
+            return;
+        }
+        
+        new_subs.data.forEach(raw=>{
             let sub = new Subtitle(format_time(original_start + raw.start_time), format_time(original_start + raw.end_time), raw.text)
             add_subtitle(sub)
         });
