@@ -623,7 +623,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     display_video_list();
 
     fetch("video_list").then(res=>res.json()).then(json=>{
-        if (json.size == 0) return;
+        if (json.length == 0) return;
         select_video(json[0].path);
         set_overlay(false)
     });
