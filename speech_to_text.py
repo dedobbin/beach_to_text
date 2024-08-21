@@ -8,6 +8,10 @@ gcloud_connection = False
 
 mock = False
 
+class GCloudException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
 def speech_to_text_initialize():
     global speech_client, gcloud_connection
     if (mock):
@@ -54,8 +58,7 @@ def to_text(raw_audio):
     
     except InvalidArgument as e:
         print("InvalidArgument error occurred:", e)
-        # TODO: signal back through API an error happend
-        return []
+        raise GCloudException(f"GCloud error: {e}")
 
     for result in response.results:
         if not result.alternatives:

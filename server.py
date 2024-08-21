@@ -40,7 +40,14 @@ async def beach_to_text(
     # with open(save_path, "wb") as buffer:
     #     buffer.write(await audio.read())
     
-    texts = to_text(content)
+    if not is_connected_to_gcloud():
+        return {"data": [], "status": "no gcloud connection"}
+    
+    try:
+        texts = to_text(content)
+    except GCloudException as e:
+        return {"data": [], "status": str(e)}
+        
 
     result = []
     for e in texts:
@@ -59,13 +66,8 @@ async def beach_to_text(
                 "end_time": to_seconds(e.words[-1].end_time),
             })
     
-    res = {}
-    res["data"] = result
-    res["status"] = "ok"
-    if not is_connected_to_gcloud():
-        res["status"] = "no_gcloud_connection"
-
-    print("res", res)
+    res =  {"data": result, "status": "ok"}
+    #print("res", res)
     return res
 
 @app.get("/video_list")
